@@ -119,7 +119,25 @@ export const SideNavLayout = ({
         apiKey: '06941733239da4f8617d272cf2ed4d5c',
         indexName: 'patternfly',
         inputSelector: '#global-search-input',
-        debug: false // Set debug to true if you want to inspect the dropdown
+        debug: true, // Set debug to true if you want to inspect the dropdown
+        /*
+        handleSelected: function(input, event, suggestion, datasetNumber, context) {
+          // Prevents the default behavior on click and rather opens the suggestion
+          // in a new tab.
+          // click, enterKey, tabKey, blur
+          switch (context.selectionMethod) {
+            case 'blur':
+              event.preventDefault();
+              const inputField = document.activeElement;
+              inputField.blur();
+              break;
+            default:
+              document.location.href = suggestion.url;
+              console.log(location.href, suggestion.url);
+              break;
+          }
+        },
+        */
       });
     }
     if (window.fetch && pageSource === 'org') {
@@ -203,8 +221,12 @@ export const SideNavLayout = ({
         <PageHeaderToolsItem>
           {/* We can afford to use style tags because this is only on the site ONCE */}
           <Form
+            action=""
             onSubmit={event => {
               event.preventDefault();
+              console.log('form');
+              const inputField = document.activeElement;
+              inputField.blur();
               return false;
             }}
             style={{
@@ -213,7 +235,7 @@ export const SideNavLayout = ({
             className="pf-site-search"
           >
             <TextInput
-              type="text"
+              type="search"
               id="global-search-input"
               name="global-search-input"
               placeholder="Search"
@@ -222,6 +244,11 @@ export const SideNavLayout = ({
                 backgroundColor: 'var(--pf-global--BackgroundColor--dark-100)',
                 border: 0,
                 paddingLeft: '26px'
+              }}
+              onBlur={event => {
+                event.preventDefault();
+                event.stopPropagation();
+                console.log('input');
               }}
             />
             <SearchIcon
