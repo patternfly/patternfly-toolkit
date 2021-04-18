@@ -82,10 +82,9 @@ export const App = () => (
   </Router>
 );
 
-const isProd = process.env.NODE_ENV === 'production';
-const isPrerender = process.env.PRERENDER;
 // Don't use ReactDOM in SSR
-if (!isPrerender) {
+if (!process.env.PRERENDER) {
+  const isProd = process.env.NODE_ENV === 'production';
   function render() {
     const renderFn = isProd ? ReactDOM.hydrate : ReactDOM.render;
     renderFn(<App />, document.getElementById('root'));
@@ -99,3 +98,4 @@ if (!isPrerender) {
     render();
   }
 }
+

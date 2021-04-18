@@ -16,7 +16,7 @@ import {
   Tooltip,
   TooltipPosition
 } from '@patternfly/react-core';
-import * as icons from '@patternfly/react-icons';
+const icons = require('@patternfly/react-icons/dist/esm/icons/index.js');
 import './icons.css';
 import {
   Table,

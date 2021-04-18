@@ -7,7 +7,7 @@ The PatternFly Org is the source for the official documentation for PatternFly 3
 Development setup requires yarn. If you do not already have yarn installed on your system, see https://yarnpkg.com/en/.
 
 ### Live Reload Server
-#### New server
+#### v4 site
 You can install the NPM dependencies with:
 
     yarn install
@@ -16,7 +16,7 @@ A local development server at http://localhost:8003 can be started with:
 
     yarn start
 
-#### Old server
+#### v3 site
 You can install the NPM dependencies with:
 
     yarn install

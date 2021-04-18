@@ -69,7 +69,7 @@ function serializeRoot(node, options) {
 
   const importStatements = groups.import
     .map(node => node.value)
-    .map(imp => imp.replace(/(['"])\./g, (_, match) => `${match}${getRelPath()}${path.sep}\.`))
+    .map(imp => imp.replace(/(['"])\./g, (_, match) => `${match}${getRelPath().replace(/\\/g, '/')}/\.`))
     .concat(thumbnailImports)
     .join('\n')
 

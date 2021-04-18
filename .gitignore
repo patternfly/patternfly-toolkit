@@ -23,7 +23,6 @@ _site
 .DS_Store
 coverage
 public
-static
 .cache
 build
 

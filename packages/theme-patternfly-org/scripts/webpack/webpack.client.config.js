@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -7,6 +8,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const baseConfig = require('./webpack.base.config');
 const { getHtmlWebpackPlugins } = require('./getHtmlWebpackPlugins');
+const EagerImportsPlugin = require('eager-imports-webpack-plugin').default;
 
 let pfDir;
 try {
@@ -18,23 +20,22 @@ catch {
 }
 const staticDir = path.join(process.cwd(), 'static/');
 // Don't include PatternFly styles twice
-const reactCSSRegex = /(react-[\w-]+\/dist|react-styles\/css)\/.*\.css$/;
-const reactJSRegex = /react-([^\\/]*)[\\/]dist[\\/].*\.js$/
+const reactCSSRegex = /(react-[\w-]+[\\/]dist|react-styles[\\/]css)[\\/].*\.css$/;
+const reactJSRegex = /react-([^\\/]*)[\\/]dist[\\/](esm|js)[\\/].*\.js$/
 
 const clientConfig = async (env, argv) => {
   const isProd = argv.mode === 'production';
+  const isAnalyze = env === 'analyze';
 
   return {
     output: {
       path: path.resolve('public'),
-      filename: '[name].[hash].bundle.js'
+      filename: isProd ? '[name].[contenthash].bundle.js' : '[name].bundle.js'
     },
     devServer: {
-      hot: true,
+      hot: false,
       historyApiFallback: true,
-      port: argv.port,
-      clientLogLevel: 'info',
-      stats: 'minimal'
+      port: argv.port
     },
     optimization: {
       splitChunks: {
@@ -43,26 +44,34 @@ const clientConfig = async (env, argv) => {
         cacheGroups: {
           vendorStyles: {
             test: /[\\/]node_modules[\\/].*\.css$/,
+            name: 'vendorStyles',
             priority: 10
           },
           mainStyles: {
             test: /\.css$/,
+            name: 'mainStyles',
             priority: 9
           },
           // This speeds up reloads 2x in React and doesn't affect org's reload times
-          ...(!isProd && {
-            reactPackage: {
-              test: reactJSRegex,
-              name(module, _chunks, cacheGroupKey) {
-                const package = module.identifier().match(reactJSRegex)[1];
-                return `${cacheGroupKey}-${package}`;
-              },
-              reuseExistingChunk: true,
-              priority: 5
+          patternfly: {
+            test: reactJSRegex,
+            name(module, _chunks, cacheGroupKey) {
+              const package = module.identifier().match(reactJSRegex)[1];
+              return `${cacheGroupKey}-${package}`;
             },
-          }),
+            reuseExistingChunk: true,
+            priority: 5
+          },
+          monacoEditor: {
+            test: /[\\/]node_modules[\\/]monaco-editor/,
+            name: 'monacoEditor',
+            enforce: true,
+            reuseExistingChunk: true,
+            priority: 4
+          },
           defaultVendors: {
             test: /[\\/]node_modules[\\/]/,
+            name: 'defaultVendors',
             enforce: true,
             reuseExistingChunk: true,
             priority: 3
@@ -72,7 +81,6 @@ const clientConfig = async (env, argv) => {
       minimize: isProd ? true : false,
       minimizer: [
         new TerserPlugin({
-          cache: path.join(process.cwd(), '.cache/terser'),
           ...(process.env.CI ? { parallel: 2 } : {})
         }),
       ],
@@ -96,7 +104,7 @@ const clientConfig = async (env, argv) => {
                 postcssOptions: {
                   plugins: [
                     require('autoprefixer')({
-                      env: '>0.25%, not ie 11, not op_mini all',
+                      env: '>1%, not ie 11, not op_mini all',
                       flexbox: false,
                       grid: false
                     })
@@ -113,21 +121,26 @@ const clientConfig = async (env, argv) => {
       ]
     },
     plugins: [
-      new MiniCssExtractPlugin(!isProd ? {} : {
-        filename: '[name].[contenthash].css',
-        chunkFilename: '[name].[contenthash].css',
+      new webpack.DefinePlugin({
+        'process.env.PRERENDER': JSON.stringify(false),
+      }),
+      new MiniCssExtractPlugin({
+        filename: isProd ? '[name].[contenthash].css' : '[name].css',
+        chunkFilename: isProd ? '[name].[contenthash].css' : '[name].css',
       }),
       new CopyPlugin({
         patterns: [
           // versions.json will later be copied to the root www dir
           { from: path.join(__dirname, '../../versions.json'), to: 'versions.json' },
+          { from: path.join(__dirname, '../../static'), to: '' }, // favicons
           { from: path.join(pfDir, 'assets/images/'), to: 'assets/images/' },
-          { from: path.join(pfDir, 'assets/fonts/'), to: 'assets/fonts/' },
           ...(fs.existsSync(staticDir) ? [{ from: staticDir, to: '' }] : [])
         ]
       }),
-      ...await getHtmlWebpackPlugins({ isProd, ...argv }), // Create an HTML page per route
-      ...(env === 'analyze'
+      // Create an HTML page per route
+      ...await getHtmlWebpackPlugins({ isProd: isProd && !isAnalyze, ...argv }),
+      ...(isProd ? [] : [new EagerImportsPlugin()]),
+      ...(isAnalyze
         ? [
           new BundleAnalyzerPlugin({
             generateStatsFile: true,

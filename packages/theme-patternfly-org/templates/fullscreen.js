@@ -1,8 +1,8 @@
 import React from 'react';
 import { LiveProvider, LivePreview } from 'react-live';
-import * as reactCoreModule from '@patternfly/react-core';
-import * as reactTableModule from '@patternfly/react-table';
 import { transformCode } from '../helpers/transformCode';
+const reactCoreModule = require('@patternfly/react-core');
+const reactTableModule = require('@patternfly/react-table');
 import './fullscreen.css';
 
 export const FullscreenTemplate = ({

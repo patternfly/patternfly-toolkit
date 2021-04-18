@@ -11,7 +11,8 @@ import {
     TextVariants
 } from "@patternfly/react-core";
 import { Link } from 'theme-patternfly-org/components';
-import { GithubIcon, TwitterIcon } from "@patternfly/react-icons";
+import GithubIcon from '@patternfly/react-icons/dist/esm/icons/github-icon';
+import TwitterIcon from '@patternfly/react-icons/dist/esm/icons/twitter-icon';
 import redhatLogo from "./RHLogo.png";
 import "./footer.css";
 import logo from '../../layouts/logo.svg';

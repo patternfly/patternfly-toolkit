@@ -1,13 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = (_env, argv) => {
   const {
     pathPrefix = '',
-    mode,
+    mode = 'development',
     algolia = {},
     hasGdprBanner = false,
     hasFooter = false,
@@ -16,7 +15,7 @@ module.exports = (_env, argv) => {
     sideNavItems = [],
     topNavItems = [],
   } = argv;
-
+  
   const isProd = mode === 'production';
 
   return {
@@ -36,7 +35,7 @@ module.exports = (_env, argv) => {
           include: [
             path.resolve(process.cwd(), 'src'),
             path.resolve(__dirname, '../..'), // Temporarily compile theme using webpack for development
-            /react-[\w-]+\/src\/.*\/examples/
+            /react-[\w-]+[\\/]src[\\/].*[\\/]examples/
           ],
           exclude: [
             path.resolve(__dirname, '../../node_modules'), // Temporarily compile theme using webpack for development
@@ -66,7 +65,7 @@ module.exports = (_env, argv) => {
             loader: 'responsive-loader',
             options: {
               adapter: require('responsive-loader/sharp'),
-              name: '[name].[contenthash].[ext]',
+              name: isProd ? '[name].[contenthash].[ext]' : '[path][name].[ext]',
               outputPath: 'images/'
             },
           }
@@ -78,7 +77,7 @@ module.exports = (_env, argv) => {
             options: {
               limit: 1024,
               fallback: 'file-loader',
-              name: '[name].[contenthash].[ext]',
+              name: isProd ? '[name].[contenthash].[ext]' : '[path][name].[ext]',
               outputPath: 'images/'
             },
           }
@@ -88,7 +87,7 @@ module.exports = (_env, argv) => {
           use: {
             loader: 'file-loader',
             options: {
-              name: '[name].[contenthash].[ext]',
+              name: isProd ? '[name].[contenthash].[ext]' : '[path][name].[ext]',
             }
           }
         },
@@ -137,26 +136,6 @@ module.exports = (_env, argv) => {
         'process.env.topNavItems': JSON.stringify(topNavItems),
         'process.env.prnum': JSON.stringify(process.env.CIRCLE_PR_NUMBER || process.env.PR_NUMBER || ''),
         'process.env.prurl': JSON.stringify(process.env.CIRCLE_PULL_REQUEST || ''),
-      }),
-      new FaviconsWebpackPlugin({
-        logo: path.resolve(__dirname, '../../images/patternfly-logo.svg'),
-        favicons: {
-          appDescription: 'Home of PatternFly Design.',
-          cache: true,
-          background: '#4F5255',
-          theme_color: '#151515',
-          icons: {
-            android: true,
-            appleIcon: true,
-            appleStartup: false,
-            coast: false,
-            favicons: true,
-            firefox: false,
-            windows: false,
-            yandex: false
-          },
-          start_url: '/'
-        }
       }),
       new MonacoWebpackPlugin(),
       ...(isProd

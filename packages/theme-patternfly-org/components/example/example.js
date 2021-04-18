@@ -2,8 +2,6 @@ import React from 'react';
 import { useLocation } from '@reach/router';
 import { LiveProvider, LiveEditor, LivePreview, LiveError } from 'react-live';
 import { Badge } from '@patternfly/react-core';
-import * as reactCoreModule from '@patternfly/react-core';
-import * as reactTableModule from '@patternfly/react-table';
 import { css } from '@patternfly/react-styles';
 import { ExampleToolbar } from './exampleToolbar';
 import { AutoLinkHeader } from '../autoLinkHeader/autoLinkHeader';
@@ -13,6 +11,8 @@ import Prism from 'prismjs';
 import missingThumbnail from './missing-thumbnail.jpg';
 import 'prismjs/themes/prism-coy.css';
 import './example.css';
+const reactCoreModule = require('@patternfly/react-core');
+const reactTableModule = require('@patternfly/react-table');
 
 const getSupportedLanguages = lang => {
   if (['js', 'javascript'].includes(lang)) {

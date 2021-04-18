@@ -21,21 +21,15 @@ async function buildWebpack(webpackConfig) {
     compiler.run((err, stats) => {
       if (err) {
         console.error(err.stack || err);
-        if (err.details) {
-          console.error(err.details);
+        if (err.message) {
+          console.error(err.message);
         }
         rej();
       }
     
-      const info = stats.toJson();
-    
+      console.log(stats.toString());
       if (stats.hasErrors()) {
-        console.error(info.errors);
         rej();
-      }
-    
-      if (stats.hasWarnings()) {
-        console.warn(info.warnings.join('\n'));
       }
 
       res();
@@ -45,7 +39,7 @@ async function buildWebpack(webpackConfig) {
 
 async function execFile(file, args) {
   const start = new Date();
-  return new Promise((res, rej) => {
+  return new Promise((res, _rej) => {
     const child = fork(path.join(__dirname, file), args);
     function errorHandler(err) {
       console.error(err);

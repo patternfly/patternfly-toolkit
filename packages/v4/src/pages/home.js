@@ -23,7 +23,7 @@ import open from '../images/open.svg';
 import { AutoLinkHeader } from 'theme-patternfly-org/components/autoLinkHeader/autoLinkHeader';
 import './home.css';
 
-const aboutPatternFly = `Hello, we're PatternFly.`;
+const aboutPatternFly = "Hello, we're PatternFly.";
 const patternFlyPrinciples = 'Flyer fundamentals';
 
 const HomePage = () => (

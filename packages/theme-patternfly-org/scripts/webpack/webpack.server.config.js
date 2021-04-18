@@ -10,11 +10,7 @@ const serverConfig = () => {
 			libraryTarget: 'commonjs2' // Use module.exports
     },
     target: 'node', // Load chunks using require
-    plugins: [
-      new webpack.DefinePlugin({
-        'process.env.PRERENDER': true // In app.js don't call ReactDOM.render
-      }),
-    ],
+    devtool: false,
     optimization: {
       removeAvailableModules: false,
       removeEmptyChunks: false,
@@ -29,7 +25,7 @@ const serverConfig = () => {
         },
         // This does weird things to document
         {
-          test: /(novnc-core|@novnc\/novnc)\/.*\.js/,
+          test: /(novnc-core|@novnc[\\/]novnc)[\\/].*\.js/,
           use: 'null-loader'
         }
       ]
@@ -44,6 +40,11 @@ const serverConfig = () => {
         'xterm-addon-fit':  'theme-patternfly-org/helpers/xterm-addon-fit',
       },
     },
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env.PRERENDER': JSON.stringify(true) // In app.js don't call ReactDOM.render
+      }),
+    ],
     // Load in prerender.js instead
     externals: ['react', 'react-dom', '@reach/router']
   };

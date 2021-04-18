@@ -108,7 +108,7 @@ Use this for 'fa' regular icons: `<i className="far [insert-icon-name]"></i>`<br
 <small>Note: Be sure to read [how to get started with icons](/get-started/develop#using-styles) when using 'fa' regular icons</small>
 
 If you're looking to copy React for an icon:<br />
-Use this for 'pficon' icons: `import { [insert-icon-name] } from '@patternfly/react-icons'`
+Use this for 'pficon' icons: `import [icon-name] from '@patternfly/react-icons/dist/esm/icons/icon-name'`
 
 <IconsTable />
 

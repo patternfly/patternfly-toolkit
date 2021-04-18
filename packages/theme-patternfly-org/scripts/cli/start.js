@@ -6,8 +6,6 @@ const { getConfig } = require('./helpers');
 const { watchMD } = require('../md/parseMD');
 
 function startWebpackDevServer(webpackConfig) {
-  webpackConfig.devServer.filename = webpackConfig.output.filename;
-  webpackConfig.devServer.publicPath = webpackConfig.output.publicPath;
   const { port } = webpackConfig.devServer;
   const compiler = webpack(webpackConfig);
   const server = new WebpackDevServer(compiler, webpackConfig.devServer);

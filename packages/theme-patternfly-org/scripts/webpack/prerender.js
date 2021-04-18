@@ -4,7 +4,6 @@ const { ServerLocation } = require('@reach/router');
 const ssrPrepass = require('react-ssr-prepass');
 // react, react-dom, and @reach/router are all EXCLUDED from the ssr-bundle.js
 // The versions imported above are used instead, which allows us to use <ServerLocation>
-// const ssrPrepass = require('react-ssr-prepass');
 
 // This function is effectively synchronous because it mutates global.setTimeout
 // Only allow one copy at a time to run
