@@ -23,4 +23,4 @@ import {communityExtensions} from './extensions';
 Contributing extensions
 Anyone can add assets to the community component index. You can add a new community extension by submitting a pull request against the patternfly-org repo to add your component to the index. Requests will be reviewed and approved by the PatternFly team.
 
-To prepare your pull request to update the component index, follow <a>the process outlined here</>.
+To prepare your pull request to update the component index, follow <a>the process outlined here</a>.
