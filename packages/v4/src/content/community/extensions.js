@@ -58,7 +58,6 @@ export const redhatExtensions = [
   {
     "component": "Console",
     "description": "React-console extension",
-    "maintainer": "",
     "links": [
       {
         "name": "Doc",
@@ -71,15 +70,13 @@ export const redhatExtensions = [
     ]
   },
   {
-    "component": "Log Viewer???",
+    "component": "Log Viewer",
     "description": "",
-    "maintainer": "",
     "links": [""]
   },
   {
-    "component": "Notification Drawer???",
+    "component": "Notification Drawer",
     "description": "",
-    "maintainer": "",
     "links": [""]
   },
   {
@@ -100,7 +97,6 @@ export const redhatExtensions = [
   {
     "component": "Topology View",
     "description": "Implements a topology view",
-    "maintainer": "",
     "links": [
       {
         "name": "Code",
@@ -111,7 +107,6 @@ export const redhatExtensions = [
   {
     "component": "Virtualized table",
     "description": "A virtualized table that supports infinite scrolling",
-    "maintainer": "",
     "links": [
       {
         "name": "Doc",

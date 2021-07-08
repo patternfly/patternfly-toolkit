@@ -2278,6 +2278,11 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
+"@novnc/novnc@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@novnc/novnc/-/novnc-1.2.0.tgz#535ffd7d074022d35205deae2753100f1f2b29f3"
+  integrity sha512-FaUckOedGhSbwQBXk/KGyxKt9ngskg4wPw6ghbHWXOUEmQscAZr3467lTU5DSfppwHJt5k+lQiHoeYUuY90l2Q==
+
 "@npmcli/move-file@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@npmcli/move-file/-/move-file-1.0.1.tgz#de103070dac0f48ce49cf6693c23af59c0f70464"
@@ -2399,6 +2404,11 @@
   resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-4.115.2.tgz#200111d52fe07d1380371530304bad9edf45de51"
   integrity sha512-7hbJ4pRmj+rlXclD2F/UwceO6fS+9flGsgHc4eUc7NyTN2GXl6PLcqrjE2CtiKEPV90+KwsGQGJXZj8bz9HweA==
 
+"@patternfly/patternfly@4.118.1":
+  version "4.118.1"
+  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-4.118.1.tgz#e74081b084ddd692aca38a52d113c84d05137b35"
+  integrity sha512-LwMVjVYcAunmsrcmgiT5p9i2KRMUv1KZOQEoy5Na+YZu1GFeVHGB2WG6qayprmkz2bfjbSHltSjKRqErT3Nm7g==
+
 "@patternfly/react-catalog-view-extension@^4.12.0":
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/@patternfly/react-catalog-view-extension/-/react-catalog-view-extension-4.12.0.tgz#86b407ab43994006f355e321ecada429a018e26a"
@@ -2447,6 +2457,21 @@
     react-dropzone "9.0.0"
     tslib "1.13.0"
 
+"@patternfly/react-console@^4.10.5":
+  version "4.10.6"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-console/-/react-console-4.10.6.tgz#4ead28b47b641afe34c9f7fbb8f39dd2745cca5d"
+  integrity sha512-e+pnt2CwbH+apMwElMUXHBGj3IsbuOGtWO6fSHC7MEvIkbWrFnfhHwdvIJrT9scRUlWCoyk3vlr7i916ONPKRQ==
+  dependencies:
+    "@novnc/novnc" "^1.2.0"
+    "@patternfly/patternfly" "4.118.1"
+    "@patternfly/react-core" "^4.135.6"
+    "@spice-project/spice-html5" "^0.2.1"
+    "@types/file-saver" "^2.0.1"
+    file-saver "^1.3.8"
+    tslib "^1.11.1"
+    xterm "^4.8.1"
+    xterm-addon-fit "^0.2.1"
+
 "@patternfly/react-core@^4.135.0":
   version "4.135.0"
   resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-4.135.0.tgz#b64ad4da10a8814926e28fad727bc7690cd60e66"
@@ -2455,6 +2480,19 @@
     "@patternfly/react-icons" "^4.11.0"
     "@patternfly/react-styles" "^4.11.0"
     "@patternfly/react-tokens" "^4.12.0"
+    focus-trap "6.2.2"
+    react-dropzone "9.0.0"
+    tippy.js "5.1.2"
+    tslib "1.13.0"
+
+"@patternfly/react-core@^4.135.6":
+  version "4.135.6"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-4.135.6.tgz#f0a630b5fac6ca7a414aa9f6d39ab6a25f0b740f"
+  integrity sha512-tNdGMDlhNeQEsu7Zez5U9bfO1lH/VS9iCcW466NfLr7k0XJCuxiILRzdqxjYXv82orqkzebjPxwkV2OyaCcJrg==
+  dependencies:
+    "@patternfly/react-icons" "^4.11.1"
+    "@patternfly/react-styles" "^4.11.1"
+    "@patternfly/react-tokens" "^4.12.2"
     focus-trap "6.2.2"
     react-dropzone "9.0.0"
     tippy.js "5.1.2"
@@ -2484,6 +2522,11 @@
   resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-4.11.0.tgz#26790eeff22dc3204aa8cd094470f0a2f915634a"
   integrity sha512-WsIX34bO9rhVRmPG0jlV3GoFGfYgPC64TscNV0lxQosiVRnYIA6Z3nBSArtJsxo5Yn6c63glIefC/YTy6D/ZYg==
 
+"@patternfly/react-icons@^4.11.1":
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-4.11.1.tgz#6f8b5da83aebed7a5435f333f9d581fee54d4ac6"
+  integrity sha512-a3Yp14tBHo1vysw4VsMY2JDy615R8SCwwfdTCmJQByQWKTrvI8ogE21n3/noAzJyjvIO/gLWtFnaf2kgutNjKA==
+
 "@patternfly/react-inline-edit-extension@^4.7.7":
   version "4.7.7"
   resolved "https://registry.yarnpkg.com/@patternfly/react-inline-edit-extension/-/react-inline-edit-extension-4.7.7.tgz#d258f9f9863106db9edb9a3e96948edd9d09cfb9"
@@ -2509,6 +2552,11 @@
   resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-4.11.0.tgz#0068dcb18e1343242f93fa6024dcc077acd57fb9"
   integrity sha512-4eIqTwGI4mjt9DMqX6hnan4eRS+3LUWNaneTEJdmk+flKxtAE/O/OmQHvH4GetDnlSbyfATcA0VFbVtR0aRJAg==
 
+"@patternfly/react-styles@^4.11.1":
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-4.11.1.tgz#bf64b3cc74d7a57936349956132f1d978d0707fc"
+  integrity sha512-TklRcb3tDJqRwzHxngcYUva90HkUnpWKB5Mxz9NRHz4LuZSJgSzfVwTo3aZeg52KIyo+w+z3CQNnwB56hcdhPw==
+
 "@patternfly/react-table@^4.29.0":
   version "4.29.0"
   resolved "https://registry.yarnpkg.com/@patternfly/react-table/-/react-table-4.29.0.tgz#6394ff100994eac2d323ace340bfd259ec7d14d8"
@@ -2525,6 +2573,11 @@
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-4.12.0.tgz#2973c7f08a2f35997a0054bbf3c886b3c5c68822"
   integrity sha512-Oj+GxqTtx0Yu9IDCTibZLQnpcKp58JneNKEFQkJ29WJydhPG4j6oFFElkK+ub+Ft/f9B1Ky1SsfR9eabo6IykQ==
+
+"@patternfly/react-tokens@^4.12.2":
+  version "4.12.2"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-4.12.2.tgz#027d810c68053c098f24440faafb14604a922613"
+  integrity sha512-buvc2U6H0cqAdEw6KOMkOcL1a55ijfNPSJ8k3NTajoMW8bOt4Dug6Ib+L2SZRcDjOzx6L2MGbX1/Rjx1WGuexA==
 
 "@patternfly/react-topology@^4.9.6":
   version "4.9.6"
@@ -2571,6 +2624,11 @@
     invariant "^2.2.3"
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
+
+"@spice-project/spice-html5@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@spice-project/spice-html5/-/spice-html5-0.2.1.tgz#9452fc7435a8b1c67937d86ea3b6d6d7e0616725"
+  integrity sha512-NY86i+x/0ldKK89enXghsXCzWwfb5DQ91hQFu9hbyLcAfCVn+ZKoYsw7xUWX6/HQBRrdu/4F1id7SdOwNqpG9g==
 
 "@types/anymatch@*":
   version "1.3.1"
@@ -2871,6 +2929,11 @@
   integrity sha512-s76OlRaBfqtGu2ZBobnZv2NETfqsQUVfKKlOkKNGo4ArBsqiblodKsnQ3j29hCCgmpQacEfLxealV96za+tzVQ==
   dependencies:
     "@types/node" "*"
+
+"@types/file-saver@^2.0.1":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/file-saver/-/file-saver-2.0.2.tgz#bd593ccfaee42ff94a5c1c83bf69ae9be83493b9"
+  integrity sha512-xbqnZmGrCEqi/KUzOkeUSe77p7APvLuyellGaAoeww3CHJ1AbjQWjPSCFtKIzZn8L7LpEax4NXnC+gfa6nM7IA==
 
 "@types/geojson@*":
   version "7946.0.7"
@@ -14518,6 +14581,11 @@ tslib@1.13.0, tslib@^1.10.0, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
 
+tslib@^1.11.1:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
+  integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
+
 tslib@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.1.tgz#410eb0d113e5b6356490eec749603725b021b43e"
@@ -15754,6 +15822,16 @@ xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==
+
+xterm-addon-fit@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/xterm-addon-fit/-/xterm-addon-fit-0.2.1.tgz#353f43921eb78e3f9ad3f3afbb14e7ac183ca738"
+  integrity sha512-BlR57O3t1/bmVcnS81bn9ZnNf+GiGNbeXdNUKSBa9tKEwNUMcU3S+KFLIRv7rm1Ty0D5pMOu0vbz/RDorKRwKQ==
+
+xterm@^4.8.1:
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/xterm/-/xterm-4.13.0.tgz#7998de1e2ad92c4796fe45807be4f31061f3d9d1"
+  integrity sha512-HVW1gdoLOTnkMaqQCr2r3mQy4fX9iSa5gWxKZ2UTYdLa4iqavv7QxJ8n1Ypse32shPVkhTYPLS6vHEFZp5ghzw==
 
 y18n@^3.2.1:
   version "3.2.1"
