@@ -7,8 +7,10 @@ A **card** is a square or rectangular container that can contain any kind of con
 
 Basic cards will have native keyboard interaction with **Tab** navigating between interactive elements and **Shift + Tab** navigating backwards. Any elements inside a card will follow their usual accessibility expectations. 
 
+<br/>
 In general, the card component already has accessibility built in. However, variants that will need additional considerations are:
-- **Expandable variant:** for expandable variants it’s important to add additional details for screen reader users to understand this interaction. Add 
+- **Expandable variant:** for expandable variants it’s important to add additional details for screen reader users to understand this interaction. 
+Add:
 
 ```
 toggleButtonProps=({
