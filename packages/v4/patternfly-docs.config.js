@@ -24,7 +24,7 @@ module.exports = {
     { section: 'utilities' },
     { section: 'contribute' },
     { section: 'training' },
-    { href: '/community' }
+    { section: 'community' }
   ],
   topNavItems: [],
   port: 8003,

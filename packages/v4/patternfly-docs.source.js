@@ -7,8 +7,10 @@ module.exports = (sourceMD, sourceProps) => {
   sourceMD(path.join(contentBase, 'get-started/**/*.md'), 'pages-get-started');
   sourceMD(path.join(contentBase, 'developer-resources/**/*.md'), 'developer-resources');
   sourceMD(path.join(contentBase, 'accessibility/**/*.md'), 'accessibility');
+  sourceMD(path.join(contentBase, 'community/**/*.md'), 'community');
   sourceMD(path.join(contentBase, 'design-guidelines/**/*.md'), 'design-guidelines');
   sourceMD(path.join(contentBase, 'training/**/*.md'), 'training');
+  sourceMD(path.join(contentBase, 'extensions/**/*.md'), 'extensions');
 
   // Theme pages
   const themePagesPath = require
@@ -34,18 +36,9 @@ module.exports = (sourceMD, sourceProps) => {
   const reactCodeEditorPath = require
     .resolve('@patternfly/react-code-editor/package.json')
     .replace('package.json', 'src');
-
-  // extensions
   const reactChartsPath = require
       .resolve('@patternfly/react-charts/package.json')
       .replace('package.json', 'src');
-  const reactCatalogViewPath = require
-      .resolve('@patternfly/react-catalog-view-extension/package.json')
-      .replace('package.json', 'src');
-  const reactVirtualizedPath = require
-      .resolve('@patternfly/react-virtualized-extension/package.json')
-      .replace('package.json', 'src');
-  const reactConsolePath = require.resolve('@patternfly/react-console/package.json').replace('package.json', 'src');
   const reactLogViewerPath = require
       .resolve('@patternfly/react-log-viewer/package.json')
       .replace('package.json', 'src');
@@ -54,11 +47,7 @@ module.exports = (sourceMD, sourceProps) => {
   sourceProps(path.join(reactCorePath, '/**/*.tsx'), reactPropsIgnore);
   sourceProps(path.join(reactTablePath, '/**/*.tsx'), reactPropsIgnore);
   sourceProps(path.join(reactCodeEditorPath, '/**/*.tsx'),reactPropsIgnore);
-
   sourceProps(path.join(reactChartsPath, '/**/*.tsx'),reactPropsIgnore);
-  sourceProps(path.join(reactCatalogViewPath, '/**/*.tsx'), reactPropsIgnore);
-  sourceProps(path.join(reactVirtualizedPath, '/**/*.tsx'), reactPropsIgnore);
-  sourceProps(path.join(reactConsolePath, '/**/*.tsx'), reactPropsIgnore);
   sourceProps(path.join(reactLogViewerPath, '/**/*.tsx'), reactPropsIgnore);
 
   // React MD
@@ -77,15 +66,6 @@ module.exports = (sourceMD, sourceProps) => {
 
   // React-log-viewer MD
   sourceMD(path.join(reactLogViewerPath, '/**/examples/*.md'), 'react');
-
-  // Catalog view MD
-  sourceMD(path.join(reactCatalogViewPath, '/**/examples/*.md'), 'react');
-
-  // Virtualized MD
-  sourceMD(path.join(reactVirtualizedPath, '/**/examples/*.md'), 'react');
-
-  // Consoles MD
-  sourceMD(path.join(reactConsolePath, '/**/examples/*.md'), 'react');
 
   // Release notes
   sourceMD(require.resolve('@patternfly/patternfly/RELEASE-NOTES.md'), 'html');
