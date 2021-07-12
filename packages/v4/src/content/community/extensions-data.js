@@ -15,17 +15,6 @@ export const communityExtensions = [
     ]
   },
   {
-    "component": "Conditional filter",
-    "description": "Component that allows you fine grained filtering, by choosing a group and then using a specific component to filter.",
-    "tags": ["Cloud platform"],
-    "links": [
-      {
-        "name": "Doc",
-        "href": "https://cloud.redhat.com/docs/storybook?path=/story/components--conditional-filter"
-      }
-    ]
-  },
-  {
     "component": "Console",
     "description": "React-console extension",
     "tags": ["App services"],
@@ -37,28 +26,6 @@ export const communityExtensions = [
       {
         "name": "Code",
         "href": "https://github.com/patternfly/patternfly-react/tree/master/packages/react-console"
-      }
-    ]
-  },
-  {
-    "component": "Date format",
-    "description": "Date Format component shows date in three different formats. Relative, exact and onlyDate. Default type is relative.",
-    "tags": ["Cloud platform"],
-    "links": [
-      {
-        "name": "Doc",
-        "href": "https://cloud.redhat.com/docs/storybook?path=/story/components--dateformat"
-      }
-    ]
-  },
-  {
-    "component": "Delete modal",
-    "description": "Standard modal for deleting items",
-    "tags": ["App services"],
-    "links": [
-      {
-        "name": "Code",
-        "href": "https://github.com/christiemolloy/application-services-common-components/blob/master/commonComponents/delete-modal.md"
       }
     ]
   },
