@@ -1,7 +1,7 @@
 export const communityExtensions = [
   {
-    "component": "Catalog View",
-    "description": "Implements a catalog view using PatternFly components",
+    "component": "Catalog view",
+    "description": "Implements a catalog view using PatternFly components.",
     "tags": ["App services"],
     "links": [
       {
@@ -16,7 +16,7 @@ export const communityExtensions = [
   },
   {
     "component": "Console",
-    "description": "React-console extension",
+    "description": "Implements a React-console extension.",
     "tags": ["App services"],
     "links": [
       {
@@ -30,8 +30,8 @@ export const communityExtensions = [
     ]
   },
   {
-    "component": "Topology View",
-    "description": "Implements a topology view",
+    "component": "Topology view",
+    "description": "Implements a topology view.",
     "tags": ["App services"],
     "links": [
       {
@@ -42,7 +42,7 @@ export const communityExtensions = [
   },
   {
     "component": "Virtualized table",
-    "description": "A virtualized table that supports infinite scrolling",
+    "description": "Implements a virtualized table that supports infinite scrolling.",
     "tags": ["App services"],
     "links": [
       {

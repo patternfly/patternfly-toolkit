@@ -1,5 +1,5 @@
 ---
-id: Community Extensions
+id: Community extensions
 section: community
 ---
 Community extensions are developed and maintained by members of the PatternFly community. They are often more 
@@ -13,8 +13,8 @@ and are not supported directly by the PatternFly team. For support, open issues 
 and join the PatternFly <a href="//slack.patternfly.org/" target="_blank" rel="noopener noreferrer">Slack</a> workspace.
 
 ## Contributing extensions
-Anyone can add assets to the community component index. You can add a new community extension by submitting a pull 
-request against the patternfly-org repo to add your component to `extensions-data.js`. Requests will be reviewed and 
+Anyone can add assets to the community component index. To request a new community extension, submit  a pull 
+request against the patternfly-org repo and add your component to `extensions-data.js`. Requests will be reviewed and 
 approved by the PatternFly team.
 
 import {ExtensionsDataList} from './extensions-data-list';

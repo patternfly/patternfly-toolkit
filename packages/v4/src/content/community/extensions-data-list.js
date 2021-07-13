@@ -10,7 +10,7 @@ import {
 
 export const ExtensionsDataList = (props) =>
 (
-    <DataList aria-label="Simple data list example">
+    <DataList aria-label="Community extensions">
         {props.data.map(item => {
             const links = item.links.map((link, index) => {
                 return (
@@ -19,7 +19,6 @@ export const ExtensionsDataList = (props) =>
                     </span>
                 );
             });
-            console.log(links);
             return (
                 <DataListItem aria-labelledby="simple-item1">
                     <DataListItemRow>
