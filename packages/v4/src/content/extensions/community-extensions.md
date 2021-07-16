@@ -1,6 +1,6 @@
 ---
 id: Community extensions
-section: community
+section: extensions
 ---
 Community extensions are developed and maintained by members of the PatternFly community. They are often more 
 solution-based than core PatternFly components, may be subject to change, or be experimental in nature. Anything 
