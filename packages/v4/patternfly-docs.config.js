@@ -17,13 +17,14 @@ module.exports = {
     { section: 'guidelines' },
     { section: 'UX writing' },
     { section: 'components' },
+    { section: 'extensions' },
     { section: 'charts' },
     { section: 'demos' },
     { section: 'layouts' },
     { section: 'utilities' },
     { section: 'contribute' },
     { section: 'training' },
-    { section: 'community' }
+    { href: '/community' }
   ],
   topNavItems: [],
   port: 8003,

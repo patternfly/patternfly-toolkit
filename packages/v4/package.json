@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@patternfly/react-docs": "5.19.2",
+    "@patternfly/react-console": "^4.10.5",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "theme-patternfly-org": "^0.5.23"
