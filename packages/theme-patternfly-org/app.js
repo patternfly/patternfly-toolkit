@@ -62,7 +62,7 @@ const FullscreenComponent = ({ Component, title }) => {
   }, []);
   const { examples = {} } = Component.getPageData();
   const Example = examples[title];
-  return isLoaded ? <Example isFullscreen={false} isFullscreenPreview /> : <Component /> // ;
+  return isLoaded ? <Example isFullscreen={false} isFullscreenPreview /> : <Component />;
 };
 
 // Export for SSR

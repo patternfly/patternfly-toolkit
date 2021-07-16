@@ -7,14 +7,21 @@ const toVfile = require('to-vfile'); // https://github.com/vfile/vfile
 const vfileReport = require('vfile-reporter');
 const yaml = require('js-yaml'); // https://github.com/nodeca/js-yaml
 const { makeSlug } = require('../../helpers/slugger');
+const { liveCodeTypes } = require('../../helpers/liveCodeTypes');
 const { tsDocgen } = require('../tsDocgen');
 const { sync } = require('glob');
 const chokidar = require('chokidar');
 
+let exitCode = 0;
 const outputBase = path.join(process.cwd(), `src/generated`);
 const tsDocs = {};
 const routes = {};
-let exitCode = 0;
+const globs = {
+  props: [],
+  md: [],
+  // [mdFile]: { source, files[] }
+  mdExternal: {}
+};
 
 function toReactComponent(mdFilePath, source) {
   // vfiles allow for nicer error messages and have native `unified` support
@@ -41,11 +48,6 @@ function toReactComponent(mdFilePath, source) {
       // Fail early
       if (!frontmatter.id) {
         file.fail('id attribute is required in frontmatter for PatternFly docs');
-      }
-      if (frontmatter.section === 'overview') {
-        // Temporarily override section until https://github.com/patternfly/patternfly-react/pull/4862 is in react-docs
-        // Affected pages are release notes and upgrade guides
-        frontmatter.section = 'developer-resources';
       }
       source = frontmatter.source || source;
       const slug = makeSlug(source, frontmatter.section, frontmatter.id);
@@ -147,7 +149,7 @@ function toReactComponent(mdFilePath, source) {
     // .use(require('remark-rehype'))
     // .use(require('rehype-react'), { createElement: require('react').createElement })
     // Transform AST to JSX elements. Includes special code block parsing
-    .use(require('./mdx-ast-to-mdx-hast'))
+    .use(require('./mdx-ast-to-mdx-hast'), { mdExternal: globs.mdExternal, source })
     // Don't allow exports
     .use(() => tree => remove(tree, 'export'))
     // Comments aren't very useful in generated files no one wants to look at
@@ -158,7 +160,7 @@ function toReactComponent(mdFilePath, source) {
       const isExample = node =>
         node.type === 'element'
         && node.tagName === 'Example'
-        && ['js', 'html'].includes(node.properties.lang)
+        && liveCodeTypes.includes(node.properties.lang)
         && !node.properties.noLive;
       visit(tree, isExample, node => {
         if (node.properties.isFullscreen) {
@@ -235,11 +237,6 @@ function sourceMDFile(file, source) {
   }
 }
 
-const globs = {
-  props: [],
-  md: [],
-};
-
 function writeIndex() {
   const stringifyRoute = ([route, pageData]) => `'${route}': {\n    ${Object.entries(pageData)
     .map(([key, val]) => `${key}: ${JSON.stringify(val)}`)
@@ -266,18 +263,27 @@ module.exports = {
   writeIndex,
   watchMD() {
     globs.props.forEach(({ glob, ignore }) => {
-      const mdWatcher = chokidar.watch(glob, { ignored: ignore, ignoreInitial: true });
-      mdWatcher.on('add', sourcePropsFile);
-      mdWatcher.on('change', sourcePropsFile);
+      const propWatcher = chokidar.watch(glob, { ignored: ignore, ignoreInitial: true });
+      propWatcher.on('add', sourcePropsFile);
+      propWatcher.on('change', sourcePropsFile);
     });
     globs.md.forEach(({ glob, source, ignore }) => {
-      const propWatcher = chokidar.watch(glob, { ignored: ignore, ignoreInitial: true });
+      const mdWatcher = chokidar.watch(glob, { ignored: ignore, ignoreInitial: true });
       function onMDFileChange(file) {
         sourceMDFile(file, source);
         writeIndex();
       }
-      propWatcher.on('add', onMDFileChange);
-      propWatcher.on('change', onMDFileChange);
+      mdWatcher.on('add', onMDFileChange);
+      mdWatcher.on('change', onMDFileChange);
+    });
+    Object.entries(globs.mdExternal).forEach(([key, { source, files }]) => {
+      files.forEach(file => {
+        const watcher = chokidar.watch(file, { ignoreInitial: true });
+        watcher.on('change', () => {
+          sourceMDFile(key, source);
+          writeIndex();
+        });
+      });
     });
   }
 };

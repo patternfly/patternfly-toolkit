@@ -1,11 +1,11 @@
-const { jsxParser } = require('../../helpers/acorn');
+const { parse } = require('../../helpers/acorn');
 
 module.exports = {
   parseJSXAttributes: jsx => {
     // Patch until https://github.com/patternfly/patternfly/pull/3324 is in react-docs
     jsx = jsx.replace(/=(true|false)/g, (_, match) => `="${match}"`);
     const properties = {};
-    const jsxAttributes = jsxParser.parse(jsx)
+    const jsxAttributes = parse(jsx)
       .body[0]
       .expression
       .openingElement

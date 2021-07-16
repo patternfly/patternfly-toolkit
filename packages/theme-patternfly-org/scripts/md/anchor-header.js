@@ -1,6 +1,7 @@
-const { slugger } = require('../../helpers/slugger');
 const visit = require('unist-util-visit');
 const toText = require('hast-util-to-text')
+const { slugger } = require('../../helpers/slugger');
+const { liveCodeTypes } = require('../../helpers/liveCodeTypes');
 
 // This transforms headers in markdown to AutoLinkHeader JSX components
 function anchorHeader(tocCallback) {
@@ -49,7 +50,7 @@ function anchorHeader(tocCallback) {
       }
       else if (
         node.tagName === 'Example'
-        && ['js', 'html'].includes(node.properties.lang)
+        && liveCodeTypes.includes(node.properties.lang)
         && !node.properties.noLive
       ) {
         addTOCItem(

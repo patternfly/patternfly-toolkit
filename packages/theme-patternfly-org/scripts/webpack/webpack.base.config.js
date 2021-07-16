@@ -110,7 +110,6 @@ module.exports = (_env, argv) => {
         'client-styles': path.resolve(process.cwd(), 'patternfly-docs.css.js'),
         './routes-client': path.resolve(process.cwd(), 'patternfly-docs.routes.js'),
         './routes-generated': path.resolve(process.cwd(), 'src/generated/index.js'),
-        'buble': path.resolve(__dirname, '../../helpers/buble.js'), // https://github.com/FormidableLabs/react-live#what-bundle-size-can-i-expect
         'lodash': 'lodash-es' // Sanely bundle react-charts.
       },
       modules: [

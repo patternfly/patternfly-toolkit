@@ -1,6 +1,6 @@
 const versions  = require('../versions.json');
 const overpass = require('./fonts');
-const { jsxParser } = require('../helpers/acorn');
+const { parse } = require('../helpers/acorn');
 const { capitalize } = require('./capitalize');
 
 const getStaticParams = (title, html) => {
@@ -53,40 +53,55 @@ const getStaticParams = (title, html) => {
   }
 };
 
-// Allow 3 formats for example identifiers
-// 1. Example = () => { [some logic] return <jsx />; }
+// Allow 4 formats for example identifiers
+// 1. Example = () => { return <jsx />; }
 // 2. class Example {}
-// 3. function Example() { return <jsx /> }
+// 3. function Example() { return <jsx />; }
+// 4. const Example = () => { return <jsx />; }
 const allowedIdentifiers = [
   'ClassDeclaration',
   'FunctionDeclaration',
-  'ExpressionStatement'
+  'ExpressionStatement',
+  'VariableDeclaration'
 ];
 function getExampleDeclaration(code) {
-  return jsxParser.parse(code, { sourceType: 'module' })
-    .body
-    .find(node => allowedIdentifiers.includes(node.type));
+  code = code
+    .replace(/export\s+default\s+/g, '')
+    .replace(/export\s+/g, '');
+
+  const { body } = parse(code);
+  const lastParsed = body[body.length - 1];
+  if (allowedIdentifiers.includes(lastParsed.type)) {
+    return lastParsed;
+  }
 }
 
-function prettyExampleCode(title, code, declaration) {
-  // Create identifier from title
-  const ident = capitalize(
+function getIdentifier(title) {
+  return capitalize(
     title
       .replace(/^[^A-Za-z]/, '')
       .replace(/\s+([a-z])?/g, (_, match) => match ? capitalize(match) : '')
       .replace(/[^A-Za-z0-9_]/g, '')
   );
+}
+
+function prettyExampleCode(title, code, declaration, identifier) {
+  // Create identifier from title
+  const ident = identifier || getIdentifier(title);
   const jsxBlock = code.substring(declaration.start, declaration.end);
+  if (identifier) {
+    return code.replace(jsxBlock, `const ${jsxBlock}`);
+  }
   if (jsxBlock.includes('\n')) {
     // Make pretty
-    return code.replace(jsxBlock, `${ident} = () => (\n  ${
+    return code.replace(jsxBlock, `const ${ident} = () => (\n  ${
       jsxBlock
         .replace(/\n/g, '\n  ')
         .replace(/;[ \t]*$/, '')
       }\n)`);
   }
   else {
-    return code.replace(jsxBlock, `${ident} = () => ${jsxBlock}`);
+    return code.replace(jsxBlock, `const ${ident} = () => ${jsxBlock}`);
   }
 }
 
@@ -97,16 +112,17 @@ function getReactParams(title, code, scope) {
     let declaration = getExampleDeclaration(code);
     if (declaration.type === 'ExpressionStatement') {
       if (!declaration.expression.left) {
+        // () => <jsx />
         code = prettyExampleCode(title, code, declaration);
-        declaration = getExampleDeclaration(code);
-      }
-      const jsxString = code.substring(declaration.start, declaration.end);
-      code = code.replace(jsxString, `const ${jsxString}`);
-      if (declaration.expression.type === 'AssignmentExpression') {
+        toRender = getIdentifier(title);
+      } else if (declaration.expression.type === 'AssignmentExpression') {
+        // Basic = () => <jsx />
+        code = prettyExampleCode(title, code, declaration, declaration.expression.left.name);
         toRender = declaration.expression.left.name;
       }
-    }
-    else if (declaration.id) {
+    } else if (declaration.type === 'VariableDeclaration') {
+      toRender = declaration.declarations[0].id.name;
+    } else if (declaration.id) {
       toRender = declaration.id.name;
     }
   }

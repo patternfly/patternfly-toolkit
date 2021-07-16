@@ -1,122 +1,169 @@
 import React from 'react';
-import { Button, Form, TextContent, Text } from '@patternfly/react-core';
-import CopyIcon from '@patternfly/react-icons/dist/esm/icons/copy-icon';
-import AsleepIcon from '@patternfly/react-icons/dist/esm/icons/asleep-icon';
+import { Button, Form, Tooltip } from '@patternfly/react-core';
+import { CodeEditor, CodeEditorControl, Language } from '@patternfly/react-code-editor';
+import { copy, convertToJSX } from '../../helpers';
 import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import CodepenIcon from '@patternfly/react-icons/dist/esm/icons/codepen-icon';
-import { copy } from '../../helpers/copy';
-import './exampleToolbar.css';
+import CopyIcon from '@patternfly/react-icons/dist/esm/icons/copy-icon';
+import CodeIcon from '@patternfly/react-icons/dist/esm/icons/code-icon';
+import AngleDoubleRightIcon from '@patternfly/react-icons/dist/esm/icons/angle-double-right-icon';
+import ReplyAllIcon from '@patternfly/react-icons/dist/esm/icons/reply-all-icon';
 
-export class ExampleToolbar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.toCopy = props.code;
+function getLanguage(lang) {
+  if (lang === 'js') {
+    return Language.javascript;
+  } else if (lang === 'ts') {
+    return Language.typescript;
   }
 
-  state = {
-    codeOpen: false,
-    openLang: null,
-    showCopyMessage: false,
-  };
+  return lang;
+}
 
-  onCopy = () => {
-    copy(this.props.code);
+export const ExampleToolbar = ({
+  fullscreenLink,
+  codeBoxParams,
+  lang,
+  isFullscreen,
+  originalCode,
+  code,
+  setCode
+}) => {
+  const [isEditorOpen, setIsEditorOpen] = React.useState(false);
+  const [copied, setCopied] = React.useState(false);
+  let timer;
 
-    this.setState({
-      showCopyMessage: true
-    });
-    setTimeout(() => {
-      this.setState({
-        showCopyMessage: false
-      });
-    }, 2000);
-  };
+  const copyCode = () => {
+    copy(code);
 
-  onLanguageChange = lang => {
-    this.setState({
-      codeOpen: this.state.codeOpen && this.state.openLang === lang ? false : true,
-      openLang: lang
-    });
-
-    if (this.props.onLanguageChange) {
-      this.props.onLanguageChange(lang);
+    if (timer) {
+      clearTimeout(timer);
+      setCopied(false);
     }
-  }
+    setCopied(true, () => {
+      timer = setTimeout(() => {
+        setCopied(false);
+        timer = null;
+      }, 2500);
+    });
+  };
 
-  render() {
-    const { editor, fullscreenLink, codeBoxParams, supportedLangs, onDarkmodeChange, isFullscreen, hideDarkMode, componentName } = this.props;
-    const { codeOpen, showCopyMessage } = this.state;
-    return (
-      <React.Fragment>
-        <div>
-          {supportedLangs.map(lang => 
-            <Button
-              key={lang}
-              onClick={() => this.onLanguageChange(lang)}
-              variant="plain"
-              title={`Toggle ${componentName} ${lang} code`}
-              aria-label={`Toggle ${componentName} ${lang} code`}
-              aria-expanded={codeOpen}
-            >
-              {lang.toUpperCase()}
-            </Button>
-          )}
-          <Button
-            onClick={this.onCopy}
-            variant="plain"
-            aria-label={`Copy ${componentName} code`}
+  const copyLabel = 'Copy code to clipboard';
+  const languageLabel = `Toggle ${lang.toUpperCase()} code`;
+  const codesandboxLabel = 'Open example in CodeSandbox';
+  const fullscreenLabel = 'Open example in new window';
+  const convertLabel = 'Convert example from Typescript to JavaScript';
+  const undoAllLabel = 'Undo all changes';
+  const customControls = isFullscreen ? null : (
+    <React.Fragment>
+      <CodeEditorControl
+        icon={
+          <React.Fragment>
+            <CodeIcon />
+            {' ' + lang.toUpperCase()}
+          </React.Fragment>
+        }
+        onClick={() => setIsEditorOpen(!isEditorOpen)}
+        aria-label={languageLabel}
+        toolTipText={languageLabel}
+        aria-expanded={isEditorOpen}
+      />
+      <Tooltip
+        trigger="mouseenter"
+        content={<div>{copied ? 'Code copied' : copyLabel}</div>}
+        exitDelay={copied ? 1600 : 300}
+        entryDelay={300}
+        maxWidth="100px"
+        position="top"
+      >
+        <Button onClick={copyCode} variant="control" aria-label={copyLabel}>
+          <CopyIcon />
+        </Button>
+      </Tooltip>
+      {codeBoxParams &&
+        <Tooltip
+          trigger="mouseenter"
+          content={codesandboxLabel}
+          exitDelay={300}
+          entryDelay={300}
+          maxWidth="100px"
+          position="top"
+        >
+          <Form
+            aria-label={codesandboxLabel}
+            action="https://codesandbox.io/api/v1/sandboxes/define"
+            method="POST"
+            target="_blank"
+            style={{ display: "inline-block" }}
           >
-            <CopyIcon />
-          </Button>
-          {!isFullscreen && !hideDarkMode &&
             <Button
-              onClick={onDarkmodeChange}
-              variant="plain"
-              aria-label="Toggle Dark Theme"
+              aria-label={codesandboxLabel}
+              variant="control"
+              type="submit"
             >
-              <AsleepIcon />
+              <input type="hidden" name="parameters" value={codeBoxParams} />
+              <CodepenIcon />
             </Button>
-          }
-          {codeBoxParams &&
-            <Form
-              aria-label={`Open ${componentName} example in CodeSandbox`}
-              action="https://codesandbox.io/api/v1/sandboxes/define"
-              method="POST"
-              target="_blank"
-              style={{display: "inline-block"}}
-            >
-              <Button
-                aria-label={`Open ${componentName} example in CodeSandbox`}
-                variant="plain"
-                type="submit"
-              >
-                <input type="hidden" name="parameters" value={codeBoxParams} />
-                <CodepenIcon />
-              </Button>
-            </Form>
-          }
-          {fullscreenLink &&
-            <Button
-              component="a"
-              href={fullscreenLink} 
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="plain"
-              aria-label={`Open ${componentName} example in new window`} //add component?
-            >
-              <ExternalLinkAltIcon />
-            </Button>
-          }
-          {showCopyMessage &&
-            <TextContent>
-              <Text component="pre" className="ws-org-messageText">
-                Copied to clipboard
-              </Text>
-            </TextContent>
-          }
-        </div>
-        {codeOpen && editor}
-      </React.Fragment>
-    );
-  }
+          </Form>
+        </Tooltip>
+      }
+      {fullscreenLink && 
+        <CodeEditorControl
+          component="a"
+          icon={<ExternalLinkAltIcon />}
+          href={fullscreenLink} 
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={fullscreenLabel}
+          toolTipText={fullscreenLabel}
+        />
+      }
+      {isEditorOpen && lang === 'ts' &&
+        <CodeEditorControl
+          icon={(
+            <React.Fragment>
+              {'TS '}<AngleDoubleRightIcon />{' JS'}
+            </React.Fragment>
+          )}
+          aria-label={convertLabel}
+          toolTipText={convertLabel}
+          onClick={() => setCode(convertToJSX(code).code)}
+        />
+      }
+      {code !== originalCode &&
+        <CodeEditorControl
+          icon={<ReplyAllIcon />}
+          aria-label={undoAllLabel}
+          toolTipText={undoAllLabel}
+          onClick={() => setCode(originalCode)}
+        />
+      }
+    </React.Fragment>
+  );
+
+  // TODO: check if worth adding react, patternfly, and example types
+  // https://microsoft.github.io/monaco-editor/api/interfaces/monaco.languages.typescript.languageservicedefaults.html#addextralib
+  const onEditorDidMount = (_editor, monaco) => {
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      jsx: true,
+      ...monaco.languages.typescript.typescriptDefaults.getCompilerOptions()
+    });
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: true,
+      noSyntaxValidation: true,
+      noSuggestionDiagnostics: true,
+      onlyVisible: true
+    });
+  };
+
+  return (
+    <CodeEditor
+      customControls={customControls}
+      showEditor={isEditorOpen}
+      language={getLanguage(lang)}
+      height="400px"
+      code={code}
+      onChange={newCode => setCode(newCode)}
+      onEditorDidMount={onEditorDidMount}
+    />
+  );
 }

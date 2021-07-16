@@ -1,9 +1,10 @@
 const visit = require('unist-util-visit');
 const remove = require('unist-util-remove');
 const { parseJSXAttributes } = require('./jsxAttributes');
+const { liveCodeTypes } = require('../../helpers/liveCodeTypes');
 
 function isExample(node, file) {
-  if (node.type !== 'code' || !['js', 'html'].includes(node.lang)) {
+  if (node.type !== 'code' || !liveCodeTypes.includes(node.lang)) {
     return false;
   }
   if (node.meta) {

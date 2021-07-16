@@ -1,27 +1,52 @@
 import React from 'react';
 import { useLocation } from '@reach/router';
-import { LiveProvider, LiveEditor, LivePreview, LiveError } from 'react-live';
-import { Badge } from '@patternfly/react-core';
+import { Badge, CodeBlock, CodeBlockCode, debounce } from '@patternfly/react-core';
 import * as reactCoreModule from '@patternfly/react-core';
 import * as reactTableModule from '@patternfly/react-table';
 import { css } from '@patternfly/react-styles';
+import { getParameters } from 'codesandbox/lib/api/define';
 import { ExampleToolbar } from './exampleToolbar';
 import { AutoLinkHeader } from '../autoLinkHeader/autoLinkHeader';
-import { getParameters } from 'codesandbox/lib/api/define';
-import { slugger, transformCode, getStaticParams, getReactParams, getExampleClassName, getExampleId } from '../../helpers';
-import Prism from 'prismjs';
+import {
+  slugger,
+  getStaticParams,
+  getReactParams,
+  getExampleClassName,
+  getExampleId,
+  convertToReactComponent,
+  liveCodeTypes
+} from '../../helpers';
 import missingThumbnail from './missing-thumbnail.jpg';
-import 'prismjs/themes/prism-coy.css';
 import './example.css';
 
-const getSupportedLanguages = lang => {
-  if (['js', 'javascript'].includes(lang)) {
-    return ['jsx'];
+const errorComponent = err => <pre>{err.toString()}</pre>;
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null, errorInfo: null };
   }
-  else if (lang === 'html') {
-    return ['html'];
+  
+  componentDidCatch(error, errorInfo) {
+    errorInfo._suppressLogging = true;
+    this.setState({
+      error: error,
+      errorInfo: errorInfo
+    });
   }
-  return [];
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.children !== this.props.children) {
+      this.setState({ error: null, errorInfo: null });
+    }
+  }
+  
+  render() {
+    if (this.state.errorInfo) {
+      return errorComponent(this.state.error);
+    }
+    return this.props.children;
+  }  
 }
 
 // Props come from mdx-ast-to-mdx-hast.js
@@ -29,7 +54,7 @@ export const Example = ({
   code,
   lang = '',
   source,
-  noLive,
+  noLive = !liveCodeTypes.includes(lang),
   title = 'Untitled',
   isFullscreen,
   isFullscreenPreview,
@@ -43,24 +68,20 @@ export const Example = ({
   if (isFullscreenPreview) {
     isFullscreen = false;
   }
-  const supportedLangs = getSupportedLanguages(lang);
-  if (supportedLangs === []) {
-    noLive = true;
-  }
-  const editorLang = supportedLangs[0];
-  if (!editorLang) {
+  if (!lang) {
     // Inline code
     return <code className="ws-code">{code}</code>;
   } else if (noLive) {
     // Code block
-    const html = Prism.highlight(code, Prism.languages.javascript, 'javascript');
-    return <pre dangerouslySetInnerHTML={{ __html: html }} />;
+    return (
+      <CodeBlock>
+        <CodeBlockCode>{code}</CodeBlockCode>
+      </CodeBlock>
+    );
   }
 
-  // https://reactjs.org/docs/hooks-overview.html#state-hook
   const [editorCode, setEditorCode] = React.useState(code);
-  const [darkMode, setDarkMode] = React.useState(false);
-  const location = useLocation();
+  const loc = useLocation();
 
   const scope = {
     ...liveContext,
@@ -68,34 +89,53 @@ export const Example = ({
     ...reactCoreModule,
     ...reactTableModule,
   };
+  let livePreview = null;
+  if (lang === 'html') {
+    livePreview = (
+      <div
+        className={css('ws-preview-html', isFullscreen && 'pf-u-h-100')}
+        dangerouslySetInnerHTML={{ __html: editorCode }}
+      />
+    );
+  } else {
+    try {
+      const { code: transformedCode, hasTS } = convertToReactComponent(editorCode);
+      if (hasTS) {
+        lang = 'ts';
+      } else {
+        lang = 'js';
+      }
+      const getPreviewComponent = new Function('React', ...Object.keys(scope), transformedCode);
+      const PreviewComponent = getPreviewComponent(React, ...Object.values(scope));
+      livePreview = (
+        <ErrorBoundary>
+          <PreviewComponent />
+        </ErrorBoundary>
+      );
+    } catch (err) {
+      livePreview = errorComponent(err);
+    }
+  }
   const previewId = getExampleId(source, section[0], id, title);
   const className = getExampleClassName(source, section[0], id);
 
   if (isFullscreenPreview) {
-    // Fullscreen page example
     return (
-      <LiveProvider
-        scope={scope}
-        code={editorCode}
-        transformCode={code => transformCode(code, editorLang, true)}
-      >
-        <LivePreview
-          id={previewId}
-          className={css(
-            className,
-            'pf-u-h-100'
-          )}
-        />
-      </LiveProvider>
+      <div id={previewId} className={css(className, 'pf-u-h-100')}>
+        {livePreview}
+      </div>
     );
   }
 
   const codeBoxParams = getParameters(
     lang === 'html'
-      ? getStaticParams(title, code)
+      ? getStaticParams(title, editorCode)
       : getReactParams(title, editorCode, scope)
   );
-  const fullscreenLink = `${location.pathname.replace(/\/$/, '')}${location.pathname.endsWith(source) ? '' : `/${source}`}/${slugger(title)}`;
+  const fullscreenLink = loc.pathname.replace(/\/$/, '')
+    + (loc.pathname.endsWith(source) ? '' : `/${source}`)
+    + '/'
+    + slugger(title);
 
   return (
     <div className="ws-example">
@@ -110,49 +150,33 @@ export const Example = ({
         </AutoLinkHeader>
         {children}
       </div>
-      <LiveProvider
-        scope={scope}
+      {isFullscreen
+        ? <div className="ws-preview">
+            <a
+              className="ws-preview__thumbnail-link"
+              href={fullscreenLink}
+              target="_blank"
+              aria-label={`Open fullscreen ${title} example`}
+            >
+              <img src={thumbnail.src} width={thumbnail.width} height={thumbnail.height} />
+            </a>
+          </div>
+        : <div
+            id={previewId}
+            className={css(className, isFullscreen ? 'ws-preview-fullscreen' : 'ws-preview')}
+          >
+            {livePreview}
+          </div>
+      }
+      <ExampleToolbar
+        lang={lang}
+        isFullscreen={isFullscreen}
+        fullscreenLink={fullscreenLink}
+        originalCode={code}
         code={editorCode}
-        transformCode={code => transformCode(code, editorLang)}
-        disabled={isFullscreen}
-        theme={{
-          plain: isFullscreen ? { pointerEvents: 'auto' } : {},
-          styles: []
-        }}
-      >
-        {isFullscreen
-          ? <div className="ws-preview">
-              <a
-                className="ws-preview__thumbnail-link"
-                href={fullscreenLink}
-                target="_blank"
-                aria-label={`Open fullscreen ${title} example`}
-              >
-                <img src={thumbnail.src} width={thumbnail.width} height={thumbnail.height} />
-              </a>
-            </div>
-          : <LivePreview
-              id={previewId}
-              className={css(
-                className,
-                darkMode && 'pf-t-dark pf-m-opaque-200',
-                isFullscreen ? 'ws-preview-fullscreen' : 'ws-preview'
-              )} />
-        }
-
-        <ExampleToolbar
-          editor={<LiveEditor className="ws-editor" onChange={setEditorCode} />}
-          supportedLangs={supportedLangs}
-          onDarkmodeChange={() => setDarkMode(!darkMode)}
-          // Dark mode is permanently hidden per patternfly.org design
-          hideDarkMode={true}
-          isFullscreen={isFullscreen}
-          fullscreenLink={fullscreenLink}
-          code={editorCode}
-          codeBoxParams={codeBoxParams}
-          componentName={id}/>
-        <LiveError />
-      </LiveProvider>
+        setCode={debounce(setEditorCode, 300)}
+        codeBoxParams={codeBoxParams}
+      />
     </div>
   );
 }
