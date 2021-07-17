@@ -113,6 +113,41 @@ Form submit buttons should be disabled until a user starts filling out the form 
 * For a submitted form, disable the submit button while a user's responses are processing to avoid a duplicate submission.
 * For a processing form, use feedback messages and progress indicators like spinners or progress bars if the processing time might exceed user expectations.
 
+## Form sections
+Form sections sort form fields into non-hierarchical groups based on common information type, step, or visual preference. PatternFly form sections support a header followed by a left-aligned list of unnested and uncollapsible form groups, so they create a relatively flat information hierarchy. Form sections are ideal for breaking lengthy forms into simple, evenly spaced segments with all information exposed. 
+
+Default to grouping data with form sections, especially if all form fields are required. If you need to visualize complex or nested information, use [field groups](#field-groups) instead.
+
+To distinguish between form sections, title them based on the reason you grouped their inputs together. You may forego form section titles, but make sure visual separation isn't incredibly meaningful to your content. To keep form sections accessible, add an `aria-label` to indicate why you're sectioning each set of form fields together.
+
+Example: For a form section that allows users to configure traffic between pods by specifying origins, ports, and specific rules, add a title like *Ingress rules*.
+
+<img src="./img/form-sections.png" alt="Example of an 'Ingress rules' form section that groups radio buttons, dropdowns, and actions together. Form sections can feature interactive behavior typical to normal form fields, including progressive disclosure, surfacing fields based on user input." width="742"/>
+
+To view an interactive example of form sections, see our [form sections demo](/components/form/#form-sections).
+
+## Field groups
+
+Field groups sort form fields into hierarchical, collapsible groups based on theme. All field groups are nested and indented by default, so they create a clearer information architecture between groups. Since all elements won't be visible at all times, always title field groups based on their purpose. Field groups are ideal for building a more dimensional form structure or condensing lengthy forms into digestible, expandable segments.
+
+PatternFly field groups support a required title, description, and actions. 
+
+Use field groups to:
+
+- Group form fields in a more complex way.
+- Reduce information overload.
+- Hide unrequired fields. 
+- Use multiple instances of the same element without causing visual confusion.
+- Designate an area to configure advanced options.
+
+Because field groups call for more clicks, tabs, and interactions to reach form fields, they require additional accessibility considerations. Clearly label field group content so that it's clear to all users. For more field group accessibility guidance, see the [Accessibility](#accessibility)
+
+Example: For a form with multiple field groups, distinguish between each one by adding titles that convey each group's unique theme such as *Alerting*, *Query*, *Affinity*, or *Node affinity*.
+
+<img src="./img/field-groups.png" alt="Example of nested, expandable field groups in a form, arranged and labeled by common theme such as 'Alerting', 'Query', 'Affinity', 'Node affinity', and more." width="742"/>
+
+To view an interactive example of field groups, see our [field groups demo](/components/form#field-groups).
+
 ## User guidance
 
 Due to their interactive nature, forms often include features that help communicate field importance and guidance as users complete them. 
@@ -381,7 +416,21 @@ For more button text guidance, see our [button content guidelines](/components/b
 
 ## Accessibility
 
-This section highlights accessibility considerations to keep in mind when creating forms. For more accessibility guidance, see our [PatternFly accessibility guide](https://www.patternfly.org/v4/accessibility/accessibility-and-patternfly).
+This section highlights accessibility considerations to keep in mind when creating forms. For more accessibility guidance, see our [PatternFly accessibility guide](/accessibility/accessibility-and-patternfly).
+
+### Form sections
+Follow these best practices to create accessible form sections:
+
+- Always label and associate form section content.
+- If your form sections are untitled and visual separation is crucial to understanding and successfully completing your form, add an `aria-label` to indicate why each form section is grouped together. 
+
+### Field groups
+Follow these best practices to create accessible field groups:
+
+- Always label and associate field group content. 
+- When in doubt, add an `aria-label` to make sure screen reader users can access and understand all information for each field group.
+
+- Use `<div>` tags to separate elements so that users can navigate from element to element from any viewpoint.
 
 ### Placeholder text
 
